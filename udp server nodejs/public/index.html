@@ -14,7 +14,7 @@
     <div class="container">
 
       <div class="chanel">
-        <h1>Канал 1</h1>
+        <!-- <h1>Канал 1</h1> -->
         <h2 class=>Сила тока, мА</h2>
         <input type="text" size="1" readonly class="value" />
         <svg viewBox="0 0 40 40" height="30" class="led">
@@ -28,6 +28,9 @@
             stroke-width="2"
           />
         </svg>
+        <div style="height: 300px">
+          <canvas id="myChart"></canvas>
+        </div>
         <h2 class=>Напряжение, В</h2>
         <input type="text" size="1" readonly class="value" />
         <svg viewBox="0 0 40 40" height="30" class="led">
@@ -40,10 +43,12 @@
             stroke="DarkOrange"
             stroke-width="2"
           />
-        </svg> 
+        </svg>
+        <div style="height: 300px">
+          <canvas id="myChart2"></canvas>
+        </div>
       </div>
   </div>
-    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
-    <script src="js/main.js"></script>
-  </body>
+  <script src="_bundle.js"></script>
+</body>
 </html>

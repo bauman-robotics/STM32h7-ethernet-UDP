@@ -1,13 +1,80 @@
+import io from "socket.io-client";
 const socket = io.connect();
 
+let ADC = {};
+
 const val = document.getElementsByClassName("value");
-socket.on("current", function (I) {
-  val[0].value = I;
+socket.on("sample", function (msg) {
+  ADC.current = msg.current;
+  ADC.voltage = msg.voltage;
+  val[0].value = msg.current;
+  val[1].value = msg.voltage;
+  // led2.style.fill = "orange";
 });
-socket.on("voltage", function (V) {
-  val[1].value = V;
-  led2.style.fill = "orange";
-});
+
+import Chart from "chart.js";
+import "moment";
+import "chartjs-plugin-streaming";
+
+function updateChart(chart) {
+  chart.data.datasets.forEach(function (dataset) {
+    dataset.data.push({
+      x: Date.now(),
+      y: ADC.current,
+    });
+  });
+}
+function updateChart2(chart) {
+  chart.data.datasets.forEach(function (dataset) {
+    dataset.data.push({
+      x: Date.now(),
+      y: ADC.voltage,
+    });
+  });
+}
+
+let conf = {
+  type: "line",
+  data: {
+    datasets: [
+      {
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        data: [], // empty at the beginning
+      },
+    ],
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      xAxes: [
+        {
+          type: "realtime",
+          realtime: {
+            duration: 20000,
+            refresh: 1000,
+            delay: 1000,
+            pause: false,
+            ttl: undefined,
+
+            onRefresh: updateChart,
+          },
+        },
+      ],
+    },
+    plugins: {
+      streaming: {
+        frameRate: 30, // chart is drawn 30 times every second
+      },
+    },
+  },
+};
+
+var ctx = document.getElementById("myChart").getContext("2d");
+var chart = new Chart(ctx, conf);
+var ctx2 = document.getElementById("myChart2").getContext("2d");
+var chart = new Chart(ctx, conf);
 
 // window.onload = () => {
 //   "use strict";
