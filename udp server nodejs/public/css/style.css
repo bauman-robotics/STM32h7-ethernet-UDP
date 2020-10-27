@@ -29,3 +29,9 @@ html,
 .chanel {
   flex: 1;
 }
+
+.chart {
+  height: 300px;
+  display: inline-block;
+  width: 400px;
+}
