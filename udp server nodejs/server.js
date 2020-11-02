@@ -6,13 +6,16 @@ const HOST = "192.168.0.10";
 const msg = Buffer.from("Hey there!!", "utf8");
 let inCounter = 0;
 let outCounter = 0;
-let current = "3";
-let voltage = "5";
+let sample = {};
 const client = dgram.createSocket("udp4");
 
 client.on("message", function (message, remote) {
-  current = message.readIntLE(0, 4);
-  voltage = message.readIntLE(4, 4);
+  sample.I1 = message.readIntLE(0, 4);
+  sample.V1 = message.readIntLE(4, 4);
+  sample.I2 = message.readIntLE(8, 4);
+  sample.V2 = message.readIntLE(12, 4);
+  sample.I3 = message.readIntLE(16, 4);
+  sample.V3 = message.readIntLE(20, 4); 
   console.log(
     `UDP message received from: ${remote.address}:${remote.port} - ${message}`
   );
@@ -51,9 +54,6 @@ io.sockets.on("connection", function (socket) {});
 setInterval(test, 2000);
 
 function test() {
-  let msg = {};
-  msg.current = current;
-  msg.voltage = voltage;
-  io.sockets.emit("sample", msg);
-  console.log(msg);
+  io.sockets.emit("sample", sample);
+  console.log(sample);
 }

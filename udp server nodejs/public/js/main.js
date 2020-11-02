@@ -5,10 +5,13 @@ let ADC = {};
 
 const val = document.getElementsByClassName("value");
 socket.on("sample", function (msg) {
-  ADC.current = msg.current;
-  ADC.voltage = msg.voltage;
-  val[0].value = msg.current;
-  val[1].value = msg.voltage;
+  ADC = msg;
+  val[0].value = msg.I1;
+  val[1].value = msg.V1;
+  val[2].value = msg.I2;
+  val[3].value = msg.V2;
+  val[4].value = msg.I3;
+  val[5].value = msg.V3;
   // led2.style.fill = "orange";
 });
 
@@ -20,7 +23,7 @@ function updateChart(chart) {
   chart.data.datasets.forEach(function (dataset) {
     dataset.data.push({
       x: Date.now(),
-      y: ADC.current,
+      y: ADC.I1,
     });
   });
 }
@@ -29,7 +32,7 @@ function updateChart2(chart) {
   chart.data.datasets.forEach(function (dataset) {
     dataset.data.push({
       x: Date.now(),
-      y: ADC.voltage,
+      y: ADC.V1,
     });
   });
 }
